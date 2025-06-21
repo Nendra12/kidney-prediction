@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prediksi Penyakit Ginjal Kronis</title>
+
+    <!-- Link ke materialize CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: "Roboto", sans-serif;
+      }
+
+      .prediction-container {
+        margin-top: 30px;
+        margin-bottom: 50px;
+      }
+
+      .info-card {
+        background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+        border-left: 5px solid #4caf50;
+      }
+
+      .form-card {
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-predict {
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        padding: 15px 40px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: none;
+      }
+
+      .btn-predict:hover {
+        background: linear-gradient(135deg, #45a049 0%, #1b5e20 100%);
+      }
+
+      .method-card {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .method-card:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .method-card.selected {
+        border: 2px solid #9c27b0;
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+      }
+
+      .helper-text {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .normal-range {
+        color: #4caf50;
+        font-weight: 500;
+      }
+      .warning-range {
+        color: #ff9800;
+        font-weight: 500;
+      }
+      .danger-range {
+        color: #f44336;
+        font-weight: 500;
+      }
+
+      .result-section {
+        margin-top: 30px;
+        display: none;
+      }
+
+      .comparison-result {
+        margin-top: 20px;
+      }
+
+      .badge {
+        font-size: 10px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        margin-left: 10px;
+      }
+
+      .btn-predict.purple {
+        background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+      }
+
+      .btn-predict.blue {
+        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+      }
+
+      .btn-predict.green {
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+      }
+
+      .btn-predict.grey {
+        background: #9e9e9e;
+      }
+
+      @media (max-width: 600px) {
+            #predictBtnText {
+                font-size: 12px;
+            }
+            #predictBtn {
+                font-size: 15px;
+                padding: 0 10px;
+            }
+            #predictBtn i {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+  </head>
+  <body>
+    <div class="container prediction-container">
+      <!-- Header -->
+      <div class="row">
+        <div class="col s12">
+          <div class="card info-card">
+            <div class="card-content">
+              <h4 class="card-title center-align">
+                <i class="material-icons left">healing</i>
+                Prediksi Penyakit Ginjal Kronis
+              </h4>
+              <p class="center-align grey-text text-darken-2">
+                Gunakan algoritma Machine Learning untuk memprediksi risiko
+                penyakit ginjal kronis
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- pilihan metode seleks -->
+      <div class="row">
+        <div class="col s12 l8 offset-l2">
+          <div class="card">
+            <div class="card-content">
+              <h5 class="center-align purple-text text-darken-2">
+                <i class="material-icons left">psychology</i>
+                Pilih Algoritma Prediksi
+              </h5>
+
+              <div class="row">
+                <div class="col s12 m6">
+                  <div
+                    class="method-card"
+                    data-method="naive_bayes"
+                    onclick="selectMethod('naive_bayes')"
+                  >
+                    <div class="center-align">
+                      <i class="material-icons large blue-text">scatter_plot</i>
+                      <h6 class="blue-text text-darken-2">Naive Bayes</h6>
+                      <p class="grey-text">
+                        Algoritma probabilistik yang mengasumsikan independensi
+                        antar fitur.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col s12 m6">
+                  <div
+                    class="method-card"
+                    data-method="knn"
+                    onclick="selectMethod('knn')"
+                  >
+                    <div class="center-align">
+                      <i class="material-icons large green-text">group_work</i>
+                      <h6 class="green-text text-darken-2">
+                        K-Nearest Neighbors
+                      </h6>
+                      <p class="grey-text">
+                        Algoritma yang mengklasifikasi berdasarkan kedekatan
+                        dengan tetangga terdekat.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="center-align">
+                <div class="switch">
+                  <label>
+                    Mode Perbandingan
+                    <input type="checkbox" id="compareMode" />
+                    <span class="lever"></span>
+                    Bandingkan Kedua Algoritma
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- form inputan buat user -->
+      <div class="row">
+        <div class="col s12 l8 offset-l2">
+          <div class="card form-card">
+            <form id="predictionForm">
+              <div class="row">
+                <div class="input-field col s12 m6">
+                  <i class="material-icons prefix">person</i>
+                  <input
+                    id="age"
+                    name="age"
+                    type="number"
+                    min="1"
+                    max="120"
+                    class="validate"
+                    required
+                  />
+                  <label for="age">Usia (tahun)</label>
+                  <span class="helper-text"
+                    >Masukkan usia Anda (1-120 tahun)</span
+                  >
+                </div>
+
+                <div class="input-field col s12 m6">
+                  <i class="material-icons prefix">favorite</i>
+                  <input
+                    id="bp"
+                    name="bp"
+                    type="number"
+                    min="60"
+                    max="250"
+                    step="0.1"
+                    class="validate"
+                    required
+                  />
+                  <label for="bp">Tekanan Darah (mmHg)</label>
+                  <span class="helper-text">
+                    <span class="normal-range">Normal: 90-140</span> |
+                    <span class="warning-range">Tinggi: 140-180</span>
+                  </span>
+                </div>
+
+                <div class="input-field col s12 m6">
+                  <i class="material-icons prefix">opacity</i>
+                  <input
+                    id="bgr"
+                    name="bgr"
+                    type="number"
+                    min="50"
+                    max="500"
+                    step="0.1"
+                    class="validate"
+                    required
+                  />
+                  <label for="bgr">Kadar glukosa darah (mg/dL)</label>
+                  <span class="helper-text">
+                    <span class="normal-range">Normal: <140</span> |
+                    <span class="warning-range">Prediabetes: 140-199</span>
+                  </span>
+                </div>
+
+                <div class="input-field col s12 m6">
+                  <i class="material-icons prefix">local_hospital</i>
+                  <input
+                    id="sc"
+                    name="sc"
+                    type="number"
+                    min="0.1"
+                    max="20"
+                    step="0.01"
+                    class="validate"
+                    required
+                  />
+                  <label for="sc">Kadar serum kreatinin (mg/dL)</label>
+                  <span class="helper-text">
+                    <span class="normal-range">Normal: 0.6-1.2</span> |
+                    <span class="warning-range">Tinggi: 1.2-3.0</span>
+                  </span>
+                </div>
+
+                <div class="input-field col s12">
+                  <i class="material-icons prefix">water_drop</i>
+                  <input
+                    id="bu"
+                    name="bu"
+                    type="number"
+                    min="5"
+                    max="200"
+                    step="0.1"
+                    class="validate"
+                    required
+                  />
+                  <label for="bu">Kadar urea darah (mg/dL)</label>
+                  <span class="helper-text">
+                    <span class="normal-range">Normal: 7-25</span> |
+                    <span class="warning-range">Tinggi: 25-50</span>
+                  </span>
+                </div>
+
+                <div
+                  class="col s12 center-align"
+                  style="
+                    margin-top: 30px;
+                    display: flex;
+                    justify-content: center;
+                  "
+                >
+                  <button
+                    class="btn waves-effect waves-light btn-predict"
+                    type="submit"
+                    id="predictBtn"
+                    disabled
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 2px;
+                    "
+                  >
+                    <i class="material-icons left">analytics</i>
+                    <span id="predictBtnText">Pilih Algoritma Dulu</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div
+              id="loading"
+              class="center-align"
+              style="display: none; margin-top: 20px"
+            >
+              <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-green-only">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
+              <p>Memproses prediksi...</p>
+            </div>
+
+            <!-- Result tampilan -->
+            <div id="resultSection" class="result-section">
+              <div class="divider" style="margin: 30px 0"></div>
+              <div id="resultContent" class="center-align"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content">
+              <h5 class="card-title">
+                <i class="material-icons left">info</i>
+                Informasi Algoritma
+              </h5>
+              <div class="row">
+                <div class="col s12 m6">
+                  <div class="center-align">
+                    <i class="material-icons large blue-text">scatter_plot</i>
+                    <h6>Naive Bayes</h6>
+                    <p class="grey-text">
+                      Menggunakan teorema Bayes dengan asumsi independensi antar
+                      fitur. Sangat efektif untuk klasifikasi teks dan data
+                      kategorikal.
+                    </p>
+                    <div class="performance-metrics">
+                      <div class="metric" style="margin-top:5px;">
+                        <div class="metric-value">81.25%</div>
+                        <div class="metric-label">Akurasi</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col s12 m6">
+                  <div class="center-align">
+                    <i class="material-icons large green-text">group_work</i>
+                    <h6>K-Nearest Neighbors</h6>
+                    <p class="grey-text">
+                      Mengklasifikasi berdasarkan mayoritas kelas dari K
+                      tetangga terdekat. Sederhana namun powerful untuk pola
+                      data yang kompleks.
+                    </p>
+                    <div class="performance-metrics">
+                      <div class="metric" style="margin-top:5px;>
+                        <div class="metric-value">82.50%</div>
+                        <div class="metric-label">Akurasi</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script>
+      let selectedMethod = null;
+      let compareMode = false;
+
+      // Initialize Materialize components
+      document.addEventListener("DOMContentLoaded", function () {
+        M.AutoInit();
+
+        // Handle compare mode checkbox
+        const compareModeCheckbox = document.getElementById("compareMode");
+        if (compareModeCheckbox) {
+          compareModeCheckbox.addEventListener("change", function () {
+            compareMode = this.checked;
+            handleCompareModeChange();
+          });
+        }
+      });
+
+      // Handle perubahan compare mode
+      function handleCompareModeChange() {
+        const methodCards = document.querySelectorAll(".method-card");
+
+        if (compareMode) {
+          // Mode compare aktif
+          methodCards.forEach((card) => {
+            card.style.pointerEvents = "none";
+            card.style.opacity = "0.6";
+            card.classList.remove("selected");
+          });
+
+          // Update button untuk mode compare
+          document.getElementById("predictBtnText").textContent =
+            "Bandingkan Kedua Algoritma";
+          document.getElementById("predictBtn").disabled = false;
+          document.getElementById("predictBtn").className =
+            "btn waves-effect waves-light btn-predict purple";
+        } else {
+          // Mode compare tidak aktif
+          methodCards.forEach((card) => {
+            card.style.pointerEvents = "auto";
+            card.style.opacity = "1";
+          });
+
+          // Reset selection
+          selectedMethod = null;
+          document.getElementById("predictBtnText").textContent =
+            "Pilih Algoritma Dulu";
+          document.getElementById("predictBtn").disabled = true;
+          document.getElementById("predictBtn").className =
+            "btn waves-effect waves-light btn-predict grey";
+        }
+      }
+
+      // Method selection
+      function selectMethod(method) {
+        if (compareMode) {
+          return; // Ignore jika compare mode aktif
+        }
+
+        selectedMethod = method;
+
+        // Remove selected class from all cards
+        document.querySelectorAll(".method-card").forEach((card) => {
+          card.classList.remove("selected");
+        });
+
+        // Add selected class to clicked card
+        document
+          .querySelector(`[data-method="${method}"]`)
+          .classList.add("selected");
+
+        // Update button text
+        const methodName =
+          method === "naive_bayes" ? "Naive Bayes" : "KNN";
+        document.getElementById(
+          "predictBtnText"
+        ).textContent = `Prediksi dengan ${methodName}`;
+        document.getElementById("predictBtn").disabled = false;
+
+        // Update button color
+        const buttonColor = method === "naive_bayes" ? "blue" : "green";
+        document.getElementById(
+          "predictBtn"
+        ).className = `btn waves-effect waves-light btn-predict ${buttonColor}`;
+      }
+
+      // Form submission
+      document
+        .getElementById("predictionForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (!compareMode && !selectedMethod) {
+            M.toast({
+              html: "Silakan pilih algoritma atau aktifkan mode perbandingan!",
+              classes: "orange",
+            });
+            return;
+          }
+
+          // Get form data
+          const formData = {
+            age: parseFloat(document.getElementById("age").value),
+            bp: parseFloat(document.getElementById("bp").value),
+            bgr: parseFloat(document.getElementById("bgr").value),
+            sc: parseFloat(document.getElementById("sc").value),
+            bu: parseFloat(document.getElementById("bu").value),
+            method: compareMode ? "compare" : selectedMethod,
+          };
+
+          // Show loading
+          document.getElementById("loading").style.display = "block";
+          document.getElementById("resultSection").style.display = "none";
+
+          // Determine endpoint
+          const endpoint = compareMode ? "/compare" : "/predict";
+
+          // Send to Flask backend
+          fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.error) {
+                throw new Error(data.error);
+              }
+
+              if (compareMode) {
+                displayComparisonResult(data);
+              } else {
+                displayResult(data);
+              }
+
+              document.getElementById("loading").style.display = "none";
+              document.getElementById("resultSection").style.display = "block";
+              document
+                .getElementById("resultSection")
+                .scrollIntoView({ behavior: "smooth" });
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              M.toast({ html: `Error: ${error.message}`, classes: "red" });
+              document.getElementById("loading").style.display = "none";
+            });
+        });
+
+      // Display result untuk single algorithm
+      function displayResult(result) {
+        const resultHTML = `
+            <div class="card ${result.color} lighten-4">
+                <div class="card-content">
+                    <h5 class="${result.color}-text text-darken-2 center-align">
+                        <i class="material-icons left">${result.icon}</i>
+                        Risiko: ${result.risk}
+                    </h5>
+                    
+                    <div class="center-align" style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-around;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: ${
+                                  result.color
+                                };">
+                                    ${result.probability.toFixed(1)}%
+                                </div>
+                                <div style="font-size: 12px; color: #666;">Probabilitas Risiko</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #2e7d32;">
+                                    ${result.confidence.toFixed(1)}%
+                                </div>
+                                <div style="font-size: 12px; color: #666;">Confidence Score</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 24px; font-weight: bold; color: #666;">
+                                    ${result.execution_time_ms.toFixed(2)}ms
+                                </div>
+                                <div style="font-size: 12px; color: #666;">Waktu Eksekusi</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="center-align grey-text text-darken-2">${
+                      result.message
+                    }</p>
+                    
+                    <div class="center-align" style="margin-top: 20px;">
+                        <button class="btn waves-effect waves-light grey" onclick="resetForm()">
+                            <i class="material-icons left">refresh</i>
+                            Prediksi Lagi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("resultContent").innerHTML = resultHTML;
+      }
+
+      // Display comparison result
+      function displayComparisonResult(data) {
+        const nb = data.naive_bayes;
+        const knn = data.knn;
+        const comp = data.comparison;
+
+        const resultHTML = `
+            <div class="comparison-result">
+                <h5 class="center-align purple-text text-darken-2">
+                    <i class="material-icons left">compare</i>
+                    Perbandingan Algoritma
+                </h5>
+                
+                <!-- Summary Card -->
+                <div class="card ${
+                  comp.recommendation_color
+                } lighten-4" style="margin: 20px 0;">
+                    <div class="card-content center-align">
+                        <h6 class="${
+                          comp.recommendation_color
+                        }-text text-darken-2">
+                            <i class="material-icons left">${
+                              comp.recommendation_icon
+                            }</i>
+                            ${
+                              comp.agreement
+                                ? "ALGORITMA SEPAKAT"
+                                : "ALGORITMA BERBEDA"
+                            }
+                        </h6>
+                        <p style="font-size: 16px; margin: 15px 0;">
+                            ${comp.recommendation}
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Algorithms Comparison -->
+                <div class="row">
+                    <div class="col s12 m6">
+                        <div class="card blue lighten-5">
+                            <div class="card-content">
+                                <h6 class="blue-text text-darken-2">
+                                    <i class="material-icons left">scatter_plot</i>
+                                    Naive Bayes
+                                    ${
+                                      comp.more_confident_algorithm ===
+                                      "naive_bayes"
+                                        ? '<span class="badge purple white-text">Lebih Yakin</span>'
+                                        : ""
+                                    }
+                                </h6>
+                                
+                                <div class="center-align" style="margin: 15px 0;">
+                                    <div style="padding: 10px; border-radius: 20px; background: ${
+                                      nb.color
+                                    }; color: white; display: inline-block;">
+                                        <i class="material-icons left">${
+                                          nb.icon
+                                        }</i>
+                                        Risiko: ${nb.risk}
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col s4 center-align">
+                                        <div style="font-size: 18px; font-weight: bold; color: ${
+                                          nb.color
+                                        };">
+                                            ${nb.probability.toFixed(1)}%
+                                        </div>
+                                        <div style="font-size: 12px;">Probabilitas</div>
+                                    </div>
+                                    <div class="col s4 center-align">
+                                        <div style="font-size: 18px; font-weight: bold; color: #666;">
+                                            ${nb.confidence.toFixed(1)}%
+                                        </div>
+                                        <div style="font-size: 12px;">Confidence</div>
+                                    </div>
+                                    <div class="col s4 center-align">
+                                        <div style="font-size: 18px; font-weight: bold; color: #666;">
+                                            ${nb.execution_time_ms.toFixed(2)}ms
+                                        </div>
+                                        <div style="font-size: 12px;">Waktu</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col s12 m6">
+                        <div class="card green lighten-5">
+                            <div class="card-content">
+                                <h6 class="green-text text-darken-2">
+                                    <i class="material-icons left">group_work</i>
+                                    K-Nearest Neighbors
+                                    ${
+                                      comp.more_confident_algorithm === "knn"
+                                        ? '<span class="badge purple white-text">Lebih Yakin</span>'
+                                        : ""
+                                    }
+                                </h6>
+                                
+                                <div class="center-align" style="margin: 15px 0;">
+                                    <div style="padding: 10px; border-radius: 20px; background: ${
+                                      knn.color
+                                    }; color: white; display: inline-block;">
+                                        <i class="material-icons left">${
+                                          knn.icon
+                                        }</i>
+                                        Risiko: ${knn.risk}
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col s4 center-align">
+                                        <div style="font-size: 18px; font-weight: bold; color: ${
+                                          knn.color
+                                        };">
+                                            ${knn.probability.toFixed(1)}%
+                                        </div>
+                                        <div style="font-size: 12px;">Probabilitas</div>
+                                    </div>
+                                    <div class="col s4 center-align">
+                                        <div style="font-size: 18px; font-weight: bold; color: #666;">
+                                            ${knn.confidence.toFixed(1)}%
+                                        </div>
+                                        <div style="font-size: 12px;">Confidence</div>
+                                    </div>
+                                    <div class="col s4 center-align">
+                                        <div style="font-size: 18px; font-weight: bold; color: #666;">
+                                            ${knn.execution_time_ms.toFixed(
+                                              2
+                                            )}ms
+                                        </div>
+                                        <div style="font-size: 12px;">Waktu</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comparison Stats -->
+                <div class="card grey lighten-4">
+                    <div class="card-content">
+                        <h6 class="center-align">Statistik Perbandingan</h6>
+                        <div class="row">
+                            <div class="col s12 m4 center-align">
+                                <div style="font-size: 20px; font-weight: bold; color: #666;">
+                                    ${comp.confidence_difference.toFixed(1)}%
+                                </div>
+                                <div style="font-size: 12px;">Selisih Confidence</div>
+                            </div>
+                            <div class="col s12 m4 center-align">
+                                <div style="font-size: 20px; font-weight: bold; color: #666;">
+                                    ${comp.probability_difference.toFixed(1)}%
+                                </div>
+                                <div style="font-size: 12px;">Selisih Probabilitas</div>
+                            </div>
+                            <div class="col s12 m4 center-align">
+                                <div style="font-size: 20px; font-weight: bold; color: #666;">
+                                    ${comp.speed_comparison.speed_diff_ms.toFixed(
+                                      2
+                                    )}ms
+                                </div>
+                                <div style="font-size: 12px;">Selisih Kecepatan</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="center-align" style="margin-top: 20px;">
+                    <button class="btn waves-effect waves-light grey" onclick="resetForm()">
+                        <i class="material-icons left">refresh</i>
+                        Bandingkan Lagi
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("resultContent").innerHTML = resultHTML;
+      }
+
+      // Reset form
+      function resetForm() {
+        document.getElementById("predictionForm").reset();
+        document.getElementById("resultSection").style.display = "none";
+
+        selectedMethod = null;
+        compareMode = false;
+
+        const compareModeCheckbox = document.getElementById("compareMode");
+        if (compareModeCheckbox) {
+          compareModeCheckbox.checked = false;
+        }
+
+        document.querySelectorAll(".method-card").forEach((card) => {
+          card.classList.remove("selected");
+          card.style.pointerEvents = "auto";
+          card.style.opacity = "1";
+        });
+
+        document.getElementById("predictBtnText").textContent =
+          "Pilih Algoritma Dulu";
+        document.getElementById("predictBtn").disabled = true;
+        document.getElementById("predictBtn").className =
+          "btn waves-effect waves-light btn-predict grey";
+
+        document
+          .querySelector(".form-card")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>
